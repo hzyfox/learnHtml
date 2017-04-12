@@ -11,8 +11,6 @@ $(document).ready(function () {
             });
     });
     $("#register").click(function () {
-        console.log("hello");
-        $.get("http://localhost:3000/register", function (data, status) {
-        });
+        window.open("/html/register.html");
     });
 });

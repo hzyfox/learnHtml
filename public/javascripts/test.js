@@ -14,7 +14,7 @@ app.get("/register", function (req, res) {
     res.sendFile(path.join(__dirname, "../html/register.html"));
 })
 app.post("/login", function (req, res) {
-    consloe.log("receive login");
+    console.log("account is "+req.body.account+" password is "+req.body.password);
     res.end("account is " + req.body.account + " password is " + req.body.password);
 })
 var server = app.listen(3000);
