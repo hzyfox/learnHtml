@@ -10,4 +10,4 @@ var AccountSchema = new Schema({
     phonenumber: { type: String }
 });
 
-module.exports = mongoose.model('Account',AccountSchema);
+module.exports = connectAccount.model('Account',AccountSchema);
