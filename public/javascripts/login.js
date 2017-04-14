@@ -3,7 +3,7 @@ $(document).ready(function () {
         $.post("http://localhost:3000/login",
             {
                 account: $("#account").val(),
-                password: $("#password").val()
+                password: md5($("#password").val())
             },
             function (data, status) {
                 if((JSON.parse(data)).status){

@@ -19,18 +19,35 @@ app.post("/register", function (req, res) {
         email: req.body.email,
         phonenumber: req.body.phonenumber
     });
-    var outres = res;
-    accountInfo.save(function (err, res) {
+    accountInfo.save(function (err, resp) {
         if (err) {
             console.log(err);
-            outres.end(JSON.stringify({ status: fasle }));
+            res.end(JSON.stringify({ status: fasle }));
         } else {
-            console.log(res);
-            outres.end(JSON.stringify({ status: true }));
+            console.log(resp);
+            res.end(JSON.stringify({ status: true }));
         }
     })
 
 });
+
+app.post("/register_verify", function (req, res) {
+    var wherestr = { account: req.body.account };
+    var outres = res;
+    // res.writeHead(200,{'Content-Type':"text/json"})
+    Account.find(wherestr, {}, function (err, resp) {
+        console.log("数据的长度是: " + resp.length);
+        if (resp.length >= 1) {
+            console.log(resp);
+            res.send({ status: true });
+            res.end();
+        } else {
+            console.log(resp);
+            res.send({ status: false });
+            res.end();
+        }
+    })
+})
 
 app.post("/login", function (req, res) {
     console.log("account is " + req.body.account + " password is " + req.body.password);
@@ -47,7 +64,7 @@ app.post("/login", function (req, res) {
             } else {
                 if (req.body.password == res[0].password) {
                     outres.end(JSON.stringify({ status: true }));
-                }else{
+                } else {
                     outres.end(JSON.stringify({ status: false }));
                 }
             }

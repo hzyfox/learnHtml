@@ -1,21 +1,42 @@
 /// <reference path="../../typings/index.d.ts" />
+var ifregister = false;
 $(document).ready(function () {
-    $("#register").click(function () {
-        $.post("http://localhost:3000/register",
+    $("#account").blur(function () {
+        $.post("http://localhost:3000/register_verify",
             {
-                account: $("#account").val(),
-                password: $("#password").val(),
-                email: $("#email").val(),
-                phonenumber: $("#phonenumber").val()
+                account: $("#account").val()
             },
             function (data, status) {
-
-                if ((JSON.parse(data)).status) {
-                    var answer = confirm(" 注册成功！是否跳转到登录界面？");
-                    if (answer) {
-                        location.href = "http://localhost:3000/";
-                    }
+                console.log("进入到回调");
+                ifregister = false;
+                $("#ifregister").text("");
+                if (data.status) {
+                    ifregister = true;
+                    $("#ifregister").text("账号已被注册");
                 }
-            })
+            }
+        )
+    });
+    $("#register").click(function () {
+        if (!ifregister) {
+            $.post("http://localhost:3000/register",
+                {
+                    account: $("#account").val(),
+                    password: md5($("#password").val()),
+                    email: $("#email").val(),
+                    phonenumber: $("#phonenumber").val()
+                },
+                function (data, status) {
+                    console.log(data);
+                    if ((JSON.parse(data)).status) {
+                        var answer = confirm(" 注册成功！是否跳转到登录界面？");
+                        if (answer) {
+                            location.href = "http://localhost:3000/";
+                        }
+                    }
+                })
+        } else {
+
+        }
     })
 })
