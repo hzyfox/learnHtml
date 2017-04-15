@@ -5,9 +5,9 @@
     <title>计步系统--登录</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--<link href="css/style.css" rel="stylesheet">-->
-    <script src="http://localhost:3000/javascripts/md5.js"></script>
     <script src="http://localhost:3000/javascripts/jquery.js"></script>
+    <script src="http://localhost:3000/javascripts/md5.js"></script>
+    <script src="http://localhost:3000/javascripts/cookie.js"></script>
     <script src="http://localhost:3000/javascripts/login.js"></script>
 </head>
 
@@ -17,6 +17,7 @@
         <div>
             account: <input type="text" id="account"><br> password:
             <input type="password" id="password"><br>
+            <label><input id="rempwd" type="checkbox">记住密码</label><br>
             <button id="login">登录</button>
             <button id="register">注册</button>
             <p id="iflogin"></p>
