@@ -10,6 +10,7 @@ $(document).ready(function () {
                     location.href="http://localhost:3000/html/user.html";
                 }else{
                     $("#iflogin").text("账号或密码不正确");
+                    alert("账号或密码不正确");
                 }
             });
     });

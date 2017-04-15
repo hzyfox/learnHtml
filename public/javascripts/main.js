@@ -48,7 +48,24 @@ app.post("/register_verify", function (req, res) {
         }
     })
 })
-
+app.post("/changepwd", function (req, res) {
+    var wherestr = { account: req.body.account };
+    Account.find(wherestr,{},function(err,resq){
+        if(resq[0].password == req.body.originpwd){
+            //update pwd
+            Account.update(wherestr,{password:req.body.newpwd},function(err,resq){
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log(resq);
+                }
+            })
+            res.send({status:true});
+        }else{
+            res.send({status:false});
+        }
+    })
+})
 app.post("/login", function (req, res) {
     console.log("account is " + req.body.account + " password is " + req.body.password);
     var wherestr = { account: req.body.account };

@@ -13,6 +13,7 @@ $(document).ready(function () {
                 if (data.status) {
                     ifregister = true;
                     $("#ifregister").text("账号已被注册");
+                    alter("该账号已被注册！");
                 }
             }
         )
