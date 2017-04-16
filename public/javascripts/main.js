@@ -8,6 +8,7 @@ var MongoStore = require('connect-mongo')(session);
 var bodyParser = require("body-parser");
 var Account = require("./accountSchema.js");
 var connectAccount = require("./connMongo.js").connectAccount;
+var sendMail = require("./mail.js");
 
 app.use(cookieParser());
 app.use(session({
@@ -30,7 +31,9 @@ app.get("/", function (req, res) {
         res.sendFile(path.join(__dirname, "../html/login.html"));
     }
 })
-
+app.get("/login",function(req,res){
+    res.redirect("http://localhost:3000/html/login.html");
+})
 app.post("/register", function (req, res) {
     var accountInfo = new Account({
         account: req.body.account,
@@ -44,6 +47,14 @@ app.post("/register", function (req, res) {
             res.end(JSON.stringify({ status: fasle }));
         } else {
             console.log(resp);
+            var mailOptions = {
+                from: 'cs.zyhu@qq.com', // 发件地址
+                to: '312751750@qq.com', // 收件列表
+                subject: 'Hello sir', // 标题
+                //text和html两者只支持一种
+                html: '<b>Hello world ?</b>' // html 内容
+            };
+            sendMail(mailOptions);
             res.end(JSON.stringify({ status: true }));
         }
     })
