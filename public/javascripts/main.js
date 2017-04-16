@@ -2,16 +2,35 @@ var http = require("http");
 var express = require('express');
 var app = express();
 var path = require("path");
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var bodyParser = require("body-parser");
 var Account = require("./accountSchema.js");
 var connectAccount = require("./connMongo.js").connectAccount;
 
+app.use(cookieParser());
+app.use(session({
+    secret: '12345',
+    name: 'login',
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
+    resave: false,
+    saveUninitialized: true,
+    store: new MongoStore({   //创建新的mongodb数据库
+        url: "mongodb://localhost:27017/session"
+    })
+}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "../../public")));
 app.get("/", function (req, res) {
-    console.log("tab page");
-    res.sendFile(path.join(__dirname, "../html/login.html"));
+    if (req.session.user != null) {
+        res.redirect("http://localhost:3000/html/user.html");
+    } else {
+        console.log("tab page");
+        res.sendFile(path.join(__dirname, "../html/login.html"));
+    }
 })
+
 app.post("/register", function (req, res) {
     var accountInfo = new Account({
         account: req.body.account,
@@ -50,19 +69,19 @@ app.post("/register_verify", function (req, res) {
 })
 app.post("/changepwd", function (req, res) {
     var wherestr = { account: req.body.account };
-    Account.find(wherestr,{},function(err,resq){
-        if(resq[0].password == req.body.originpwd){
+    Account.find(wherestr, {}, function (err, resq) {
+        if (resq[0].password == req.body.originpwd) {
             //update pwd
-            Account.update(wherestr,{password:req.body.newpwd},function(err,resq){
-                if(err){
+            Account.update(wherestr, { password: req.body.newpwd }, function (err, resq) {
+                if (err) {
                     console.log(err);
-                }else{
+                } else {
                     console.log(resq);
                 }
             })
-            res.send({status:true});
-        }else{
-            res.send({status:false});
+            res.send({ status: true });
+        } else {
+            res.send({ status: false });
         }
     })
 })
@@ -80,6 +99,10 @@ app.post("/login", function (req, res) {
                 outres.end(JSON.stringify({ status: false }));
             } else {
                 if (req.body.password == res[0].password) {
+                    req.session.user = {
+                        account: req.body.account,
+                        password: req.body.password
+                    }
                     outres.end(JSON.stringify({ status: true }));
                 } else {
                     outres.end(JSON.stringify({ status: false }));
